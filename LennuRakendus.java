@@ -23,7 +23,7 @@ class DemoFlApplication {
             lend1 = lennuRepo.save(lend1);
             lend2 = lennuRepo.save(lend2);
             List<Istekoht> istekohad = Arrays.asList(
-                    new Istekoht(null, "1A", false, true, false, true, lend1),
+                    new Istekoht(null, "1A", false, true, false, true, lend1), //Randomiga hõivamine jäi tegemata
                     new Istekoht(null, "1B", false, false, true, false, lend1),
                     new Istekoht(null, "2A", true, true, false, false, lend1),
                     new Istekoht(null, "2B", false, false, false, false, lend1),
