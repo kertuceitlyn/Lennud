@@ -11,7 +11,7 @@ public class IstekohaTeenus {
     @Autowired
     private IstekohaRepo istekohaRepo;
     public List<Istekoht> soovitaIstekohti(Lend lend, boolean aknaÄäres, boolean väljapääsuLähedal, boolean rohkemJalaruumi) {
-        List<Istekoht> vabadKohad = istekohaRepo.findByLendAndKasHõivatudFalse(lend);
+        List<Istekoht> vabadKohad = istekohaRepo.findByLendAndKashõivatudFalse(lend);
         return vabadKohad.stream()
                 .filter(istekoht -> (!aknaÄäres || istekoht.isOnAknakoht()))
                 .filter(istekoht -> (!rohkemJalaruumi || istekoht.isOnRohkemJalaruumi()))
