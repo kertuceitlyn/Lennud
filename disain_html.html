@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lennupiletite Broneerimine</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .otsingukast {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .otsingukast input, .otsingukast button {
+            padding: 10px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f4f4f4;
+        }
+        .istekoha-kaart {
+            display: grid;
+            grid-template-columns: repeat(6, 40px);
+            gap: 5px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+        .istekoht {
+            width: 40px;
+            height: 40px;
+            text-align: center;
+            line-height: 40px;
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+        .hõivatud {
+            background-color: red;
+            cursor: not-allowed;
+        }
+        .valitud {
+            background-color: green;
+        }
+    </style>
+</head>
+<body>
+<h1>Lennupiletite Broneerimine</h1>
+<div class="otsingukast">
+    <input type="text" id="sihtkoht" placeholder="Sihtkoht">
+    <input type="date" id="kuupäev">
+    <input type="number" id="maksHind" placeholder="Maksimaalne hind">
+    <button onclick="otsiLende()">Otsi</button>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>Sihtkoht</th>
+        <th>Kuupäev</th>
+        <th>Kellaaeg</th>
+        <th>Hind</th>
+        <th>Tegevus</th>
+    </tr>
+    </thead>
+    <tbody id="lennudTabel">
+    </tbody>
+</table>
+<h2>Istekoha Valik</h2>
+<div id="istekohaKaart" class="istekoha-kaart"></div>
+<script>
+    async function otsiLende() {
+        const sihtkoht = document.getElementById('sihtkoht').value;
+        const kuupäev = document.getElementById('kuupäev').value;
+        const maksHind = document.getElementById('maksHind').value;
+
+        let päring = '';
+        if (sihtkoht) päring += `sihtkoht=${sihtkoht}&`;
+        if (kuupäev) päring += `kuupäev=${kuupäev}&`;
+        if (maksHind) päring += `maksHind=${maksHind}&`;
+
+        const vastus = await fetch(`/lennud/otsi?${päring}`);
+        const andmed = await vastus.json();
+
+        const tabeliSisu = document.getElementById('lennudTabel');
+        tabeliSisu.innerHTML = '';
+
+        andmed.forEach(lend => {
+            const rida = `<tr>
+                    <td>${lend.sihtkoht}</td>
+                    <td>${lend.kuupäev}</td>
+                    <td>${lend.kellaaeg}</td>
+                    <td>${lend.hind}€</td>
+                    <td><button onclick="otsiIstekohti(${lend.id})">Vali</button></td>
+                </tr>`;
+            tabeliSisu.innerHTML += rida;
+        });
+    }
+
+    async function otsiIstekohti(lennuId) {
+        const vastus = await fetch(`/istekohad/soovita?lendId=${lennuId}`);
+        const istekohad = await vastus.json();
+        const istekohaKaart = document.getElementById('istekohaKaart');
+        istekohaKaart.innerHTML = '';
+
+        istekohad.forEach(istekoht => {
+            const istekohtElement = document.createElement('div');
+            istekohtElement.textContent = istekoht.istekohaNumber;
+            istekohtElement.classList.add('istekoht');
+            if (istekoht.onHõivatud) {
+                istekohtElement.classList.add('hõivatud');
+            } else {
+                istekohtElement.onclick = () => istekohtElement.classList.toggle('valitud');
+            }
+            istekohaKaart.appendChild(istekohtElement);
+        });
+    }
+</script>
+</body>
+</html>
