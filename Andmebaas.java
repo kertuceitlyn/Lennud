@@ -1,4 +1,4 @@
-package com.example.demo_fl;
+/*package com.example.demo_fl;
 
 import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.context.annotation.Bean;
@@ -16,3 +16,4 @@ public class Andmebaas {
                 .build();
     }
 }
+*/
