@@ -6,6 +6,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Id;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +26,6 @@ public class Lend {
         this.kuupäev = kuupäev;
         this.lennuaeg = lennuaeg;
         this.hind = hind;
-        this.istekohad = (istekohad != null) ? istekohad : List.of();
+        this.istekohad = (istekohad != null) ? new ArrayList<>(istekohad) : new ArrayList<>();
     }
 }
